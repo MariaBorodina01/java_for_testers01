@@ -16,11 +16,11 @@ public class Triangle {
 
     public double area() {
         double p = perimeter()/2;
-        return Math.sqrt((p * poluperimetrMinusSide(p,sideA) * poluperimetrMinusSide(p,sideB) * poluperimetrMinusSide(p,sideC)));
+        return Math.sqrt((p * Raznost(p,sideA) * Raznost(p,sideB) * Raznost(p,sideC)));
 
     }
 
-    private double poluperimetrMinusSide(double p, double side) {
+    private double Raznost(double p, double side) {
         return p - side;
     }
 
