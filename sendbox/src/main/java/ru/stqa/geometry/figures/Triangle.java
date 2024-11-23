@@ -12,16 +12,23 @@ public class Triangle {
         this.sideA = sideA;
         this.sideB = sideB;
         this.sideC = sideC;
+
+        if (this.sideA < 0 || this.sideB < 0 || this.sideC < 0) {
+            throw new IllegalArgumentException("Triangle side should be non-negative");
+        }
+
+        if (this.sideA == 0 || this.sideB == 0 || this.sideC == 0) {
+            throw new IllegalArgumentException("Triangle side should be zero");
+        }
+
+        if (this.sideA > this.sideB + this.sideC || this.sideB > this.sideA + this.sideC || this.sideC > this.sideA + this.sideB ) {
+            throw new IllegalArgumentException("The sum of two sides of triangle should not be less than the third side");
+        }
     }
 
     public double area() {
         double p = perimeter()/2;
-        return Math.sqrt((p * Raznost(p,sideA) * Raznost(p,sideB) * Raznost(p,sideC)));
-
-    }
-
-    private double Raznost(double p, double side) {
-        return p - side;
+        return Math.sqrt((p * (p - sideA) * (p - sideB) * (p - sideC)));
     }
 
     public double perimeter() {
