@@ -4,35 +4,35 @@ package ru.stqa.geometry.figures;
 
 
 public class Triangle {
-    private double sideA;
-    private double sideB;
-    private double sideC;
+    private double a;
+    private double b;
+    private double c;
 
     public Triangle(double sideA, double sideB, double sideC){
-        this.sideA = sideA;
-        this.sideB = sideB;
-        this.sideC = sideC;
+        this.a = sideA;
+        this.b = sideB;
+        this.c = sideC;
 
-        if (this.sideA < 0 || this.sideB < 0 || this.sideC < 0) {
+        if (this.a < 0 || this.b < 0 || this.c < 0) {
             throw new IllegalArgumentException("Triangle side should be non-negative");
         }
 
-        if (this.sideA == 0 || this.sideB == 0 || this.sideC == 0) {
+        if (this.a == 0 || this.b == 0 || this.c == 0) {
             throw new IllegalArgumentException("Triangle side should be zero");
         }
 
-        if (this.sideA > this.sideB + this.sideC || this.sideB > this.sideA + this.sideC || this.sideC > this.sideA + this.sideB ) {
+        if (this.a > this.b + this.c || this.b > this.a + this.c || this.c > this.a + this.b) {
             throw new IllegalArgumentException("The sum of two sides of triangle should not be less than the third side");
         }
     }
 
     public double area() {
         double p = perimeter()/2;
-        return Math.sqrt((p * (p - sideA) * (p - sideB) * (p - sideC)));
+        return Math.sqrt((p * (p - a) * (p - b) * (p - c)));
     }
 
     public double perimeter() {
-        return this.sideA + this.sideB + this.sideC;
+        return this.a + this.b + this.c;
     }
 
     @Override
@@ -40,10 +40,11 @@ public class Triangle {
         if (o == null || getClass() != o.getClass()) return false;
 
         Triangle triangle = (Triangle) o;
-        return ((Double.compare(this.sideA, triangle.sideA) == 0 && Double.compare(this.sideB, triangle.sideB) == 0 && Double.compare(this.sideC, triangle.sideC) == 0)
-                || (Double.compare(this.sideA, triangle.sideB) == 0 && Double.compare(this.sideB, triangle.sideA) == 0)
-                || (Double.compare(this.sideA, triangle.sideC) == 0 && Double.compare(this.sideC, triangle.sideA) == 0)
-                || (Double.compare(this.sideB, triangle.sideC) == 0 && Double.compare(this.sideB, triangle.sideC) == 0)
+        return ((Double.compare(this.a, triangle.a) == 0 && Double.compare(this.b, triangle.b) == 0 && Double.compare(this.c, triangle.c) == 0)
+                || (Double.compare(this.a, triangle.b) == 0 && Double.compare(this.b, triangle.c) == 0 && Double.compare(this.c, triangle.a) == 0 )
+                || (Double.compare(this.a, triangle.c) == 0 && Double.compare(this.b, triangle.a) == 0 && Double.compare(this.c, triangle.b) == 0 )
+                || (Double.compare(this.a, triangle.a) == 0 && Double.compare(this.b, triangle.c) == 0 && Double.compare(this.c, triangle.b) ==0)
+                || (Double.compare(this.a, triangle.c) == 0 && Double.compare(this.b, triangle.b) == 0 && Double.compare(this.c, triangle.a) == 0)
         );
     }
 
