@@ -64,6 +64,10 @@ public class TriangleTests {
 
         var triangle = new Triangle(a, b, c);
         var triangle1 = new Triangle(c, b, a);
+        var triangle = new Triangle(b, c, a);
+        var triangle = new Triangle(a, c, b);
+        var triangle = new Triangle(b, a, c);
+
 
         Assertions.assertEquals(triangle, triangle1);
 
