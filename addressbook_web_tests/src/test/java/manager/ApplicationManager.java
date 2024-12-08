@@ -1,5 +1,7 @@
 package manager;
 
+import model.ContactData;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -9,11 +11,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class ApplicationManager {
-    public WebDriver driver;
-
+    protected   WebDriver driver;
+    private ContactHelper contacts;
     private LoginHelper session;
-
     private GroupHelper groups;
+
 
     public void init(String browser) {
         if (driver == null) {
@@ -22,7 +24,7 @@ public class ApplicationManager {
             } else if ("chrome".equals(browser)) {
                 driver = new ChromeDriver();
             } else {
-                throw new ArgumentConversionException(String.format("Unnown browser %s", browser));
+                throw new ArgumentConversionException(String.format("Unknown browser %s", browser));
             }
 
             Runtime.getRuntime().addShutdownHook(new Thread(driver::quit));
@@ -46,7 +48,14 @@ public class ApplicationManager {
         return groups;
     }
 
-    protected boolean isElementPresent(By locator) {
+    public ContactHelper contacts() {
+        if (contacts == null) {
+        }
+        contacts = new ContactHelper(this);
+        return contacts;
+    }
+
+    public boolean isElementPresent(By locator) {
         try {
             driver.findElement(locator);
             return true;
@@ -54,5 +63,4 @@ public class ApplicationManager {
             return false;
         }
     }
-
 }
