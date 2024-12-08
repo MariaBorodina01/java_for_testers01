@@ -44,7 +44,6 @@ public class ContactHelper extends HelperBase {
     }
 
     public void removeContact() {
-        openContactPage();
         manager.driver.findElement(By.name("selected[]")).click();
         manager.driver.findElement(By.xpath("//input[@value='Delete']")).click();
         manager.driver.findElement(By.linkText("home")).click();
