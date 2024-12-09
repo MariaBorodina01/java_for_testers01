@@ -11,7 +11,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class ApplicationManager {
-    protected   WebDriver driver;
+    protected WebDriver driver;
     private ContactHelper contacts;
     private LoginHelper session;
     private GroupHelper groups;

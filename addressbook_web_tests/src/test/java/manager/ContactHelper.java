@@ -8,9 +8,22 @@ public class ContactHelper extends HelperBase {
         super(manager);
     }
 
+    public void createContact(ContactData contract) {
+        openContactPage();
+        fillContactForm(contract);
+        submitContact();
+        returnToMainPage();
+    }
+
+    public void removeContact() {
+        selectContact();
+        removeSelectedContact();
+        returnToMainPage();
+    }
+
     public void openContactPage() {
         if (!manager.isElementPresent(By.name("new"))) {
-            manager.driver.findElement(By.xpath("//a[contains(.,'add new')]")).click();
+            click(By.xpath("//a[contains(.,'add new')]"));
         }
     }
 
@@ -19,33 +32,32 @@ public class ContactHelper extends HelperBase {
         return manager.isElementPresent(By.name("selected[]"));
     }
 
-    public void createContact(ContactData contract) {
-        openContactPage();
-        manager.driver.findElement(By.name("firstname")).click();
-        manager.driver.findElement(By.name("firstname")).sendKeys(contract.first_name());
-        manager.driver.findElement(By.name("lastname")).click();
-        manager.driver.findElement(By.name("lastname")).sendKeys(contract.last_name());
-        manager.driver.findElement(By.name("address")).click();
-        manager.driver.findElement(By.name("address")).sendKeys(contract.home_address());
-        manager.driver.findElement(By.name("home")).click();
-        manager.driver.findElement(By.name("home")).sendKeys(contract.home_phone());
-        manager.driver.findElement(By.name("mobile")).click();
-        manager.driver.findElement(By.name("mobile")).sendKeys(contract.mobile_phone());
-        manager.driver.findElement(By.name("work")).click();
-        manager.driver.findElement(By.name("work")).sendKeys(contract.work_phone());
-        manager.driver.findElement(By.name("email")).click();
-        manager.driver.findElement(By.name("email")).sendKeys(contract.mail1());
-        manager.driver.findElement(By.name("email2")).click();
-        manager.driver.findElement(By.name("email2")).sendKeys(contract.mail2());
-        manager.driver.findElement(By.name("email3")).click();
-        manager.driver.findElement(By.name("email3")).sendKeys(contract.mail3());
-        manager.driver.findElement(By.xpath("//input[@name='submit']")).click();
-        manager.driver.findElement(By.linkText("home page")).click();
+
+    private void selectContact() {
+        click(By.name("selected[]"));
     }
 
-    public void removeContact() {
-        manager.driver.findElement(By.name("selected[]")).click();
-        manager.driver.findElement(By.xpath("//input[@value='Delete']")).click();
-        manager.driver.findElement(By.linkText("home")).click();
+    private void fillContactForm(ContactData contract) {
+        type(By.name("firstname"), contract.first_name());
+        type(By.name("lastname"), contract.last_name());
+        type(By.name("address"),contract.home_address() );
+        type(By.name("home"), contract.home_phone());
+        type(By.name("mobile"), contract.mobile_phone());
+        type(By.name("work"), contract.work_phone());
+        type(By.name("email"), contract.mail1());
+        type(By.name("email2"), contract.mail2());
+        type(By.name("email3"), contract.mail3());
+    }
+
+    private void submitContact() {
+        click(By.xpath("//input[@name='submit']"));
+    }
+
+    private void returnToMainPage() {
+        click(By.linkText("home"));
+    }
+
+    private void removeSelectedContact() {
+        click(By.xpath("//input[@value='Delete']"));
     }
 }

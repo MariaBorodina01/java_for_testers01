@@ -49,7 +49,6 @@ public class GroupHelper extends HelperBase {
     }
 
 
-
     private void initGroupCreation() {
         click(By.name("new"));
     }

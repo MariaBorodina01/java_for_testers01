@@ -14,6 +14,5 @@ public class LoginHelper extends HelperBase {
 
         click(By.xpath("//input[@value=\'Login\']"));
         click(By.id("search-az"));
-//        manager.driver.findElement(By.id("search-az")).click();
     }
 }
