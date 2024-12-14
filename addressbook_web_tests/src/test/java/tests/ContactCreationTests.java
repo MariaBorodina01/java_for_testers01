@@ -1,22 +1,56 @@
 package tests;
 
 import model.ContactData;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactCreationTests extends TestBase {
 
-    @Test
-    public void canCreateContact() {
-        app.contacts().createContact(new ContactData("FirstName", "LastName", "Address", "1111", "2222", "3333", "mail1@mail.ru", "mail2@mail.ru", "mail3@mail.ru"));
+    public static List<ContactData> contactProvider() {
+        var result = new ArrayList<ContactData>();
+        for(var firstName : List.of("", "firstName")){
+            for (var lastName: List.of("", "lastName")) {
+                for (var homeAddress: List.of("", "homeAddress")){
+                                            result.add(new ContactData(firstName, lastName, homeAddress, "", "", "", "", "", ""));
+                }
+            }
+        }
+        for (int i = 0; i < 5; i++) {
+            result.add(new ContactData(randomString(i * 10), randomString(i * 10), randomString(i * 10), randomString(i * 10),
+                    randomString(i * 10), randomString(i * 10), randomString(i * 10), randomString(i * 10), randomString(i * 10)));
+        }
+        return result;
     }
 
-    @Test
-    public void canCreateContactWithEmptyFields() {
-        app.contacts().createContact(new ContactData());
+
+    @ParameterizedTest
+    @MethodSource("contactProvider")
+    public void canCreateMultipleContacts(ContactData contact) {
+        int contactCount = app.contacts().getCount();
+
+        app.contacts().createContact(contact);;
+
+        int newContactCount = app.contacts().getCount();
+        Assertions.assertEquals(contactCount + 1, newContactCount);
     }
 
-    @Test
-    public void canCreateContactWithFirstNameOnly() {
-        app.contacts().createContact(new ContactData().withFirstName("First Name"));
+    public static List<ContactData> negativeContactProvider() {
+        var result = new ArrayList<ContactData>(List.of(
+                new ContactData("FirstName'", "", "", "", "", "", "", "", "")));
+        return result;
+    }
+
+    @ParameterizedTest
+    @MethodSource("negativeContactProvider")
+    public void canNotCreateContact(ContactData contact) {
+        int contactCount = app.contacts().getCount();
+
+        app.contacts().createContact(contact);;
+
+        int newContactCount = app.contacts().getCount();
+        Assertions.assertEquals(contactCount, newContactCount);
     }
 }
