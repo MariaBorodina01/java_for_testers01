@@ -3,6 +3,9 @@ package manager;
 import model.ContactData;
 import org.openqa.selenium.By;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContactHelper extends HelperBase {
     public ContactHelper(ApplicationManager manager) {
         super(manager);
@@ -15,8 +18,8 @@ public class ContactHelper extends HelperBase {
         returnToMainPage();
     }
 
-    public void removeContact() {
-        selectContact();
+    public void removeContact(ContactData contact) {
+        selectContact(contact);
         removeSelectedContacts();
         returnToMainPage();
     }
@@ -28,8 +31,8 @@ public class ContactHelper extends HelperBase {
     }
 
 
-    private void selectContact() {
-        click(By.name("selected[]"));
+    private void selectContact(ContactData contact) {
+        click(By.cssSelector(String.format("input [value='%s']", contact.id())));
     }
 
     private void fillContactForm(ContactData contract) {
@@ -70,5 +73,16 @@ public class ContactHelper extends HelperBase {
         for (var checkbox : checkboxes) {
             checkbox.click();
         }
+    }
+
+    public List<ContactData> getList() {
+        var contacts = new ArrayList<ContactData>();
+        var trs = manager.driver.findElements(By.name("entry"));
+        for (var tr : trs) {
+            var td = tr.findElement(By.cssSelector("td"));
+            String id = String.valueOf(Integer.parseInt(td.findElement(By.cssSelector("input[type='checkbox']")).getAttribute("value")));;
+            contacts.add(new ContactData().withId(id));
+        }
+        return contacts;
     }
 }
