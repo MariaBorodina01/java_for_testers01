@@ -38,13 +38,10 @@ public class ContactHelper extends HelperBase {
     private void fillContactForm(ContactData contract) {
         type(By.name("firstname"), contract.first_name());
         type(By.name("lastname"), contract.last_name());
-        type(By.name("address"),contract.home_address() );
-        type(By.name("home"), contract.home_phone());
+        type(By.name("address"), contract.home_address());
         type(By.name("mobile"), contract.mobile_phone());
-        type(By.name("work"), contract.work_phone());
-        type(By.name("email"), contract.mail1());
-        type(By.name("email2"), contract.mail2());
-        type(By.name("email3"), contract.mail3());
+        type(By.name("email"), contract.mail());
+        attach(By.name("photo"), contract.photo());
     }
 
     private void submitContact() {
@@ -80,7 +77,8 @@ public class ContactHelper extends HelperBase {
         var trs = manager.driver.findElements(By.name("entry"));
         for (var tr : trs) {
             var td = tr.findElement(By.cssSelector("td"));
-            String id = String.valueOf(Integer.parseInt(td.findElement(By.cssSelector("input[type='checkbox']")).getAttribute("value")));;
+            String id = String.valueOf(Integer.parseInt(td.findElement(By.cssSelector("input[type='checkbox']")).getAttribute("value")));
+            ;
             contacts.add(new ContactData().withId(id));
         }
         return contacts;
