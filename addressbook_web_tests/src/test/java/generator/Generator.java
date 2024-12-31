@@ -9,7 +9,6 @@ import model.GroupData;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 
 public class Generator {
@@ -42,7 +41,7 @@ public class Generator {
         save(data);
     }
 
-    private Objects generate() throws IllegalConnectorArgumentsException {
+    private ArrayList<GroupData> generate() throws IllegalConnectorArgumentsException {
         if ("groups".equals(type)) {
             return generateGroups();
         } else if ("contacts".equals(type)) {
@@ -52,11 +51,11 @@ public class Generator {
         }
     }
 
-    private Objects generateContacts() {
+    private ArrayList<GroupData> generateContacts() {
         return null;
     }
 
-    private Objects generateGroups() {
+    private ArrayList<GroupData> generateGroups() {
         var result = new ArrayList<GroupData>();
         for (int i = 0; i < count; i++){
             result.add(new GroupData()
@@ -67,7 +66,7 @@ public class Generator {
         return result;
     }
 
-    private void save(Objects data) throws IllegalConnectorArgumentsException, IOException {
+    private void save(ArrayList<GroupData> data) throws IllegalConnectorArgumentsException, IOException {
 //        if("json".equals(format)){
 //            ObjectMapper mapper = new ObjectMapper();
 //            mapper.writeValue(new File(output), data);
