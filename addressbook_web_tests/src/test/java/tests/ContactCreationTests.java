@@ -1,41 +1,43 @@
 package tests;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import common.CommonFunctions;
 import model.ContactData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContactCreationTests extends TestBase {
 
-    public static List<ContactData> contactProvider() {
+    public static List<ContactData> contactProvider() throws IOException {
         var result = new ArrayList<ContactData>();
-        for(var firstName : List.of("", "firstName")){
-            for (var lastName: List.of("", "lastName")) {
-                for (var homeAddress: List.of("", "homeAddress")){
-                                            result.add(new ContactData()
-                                                    .withFirstName(firstName)
-                                                    .withLasttName(lastName)
-                                                    .withHomeAddress(homeAddress)
-                                                    .withMobilePhone("")
-                                                    .withMail("")
-                                                    );
-                }
-            }
-        }
+//        for(var firstName : List.of("", "firstName")){
+//            for (var lastName: List.of("", "lastName")) {
+//                for (var homeAddress: List.of("", "homeAddress")){
+//                                            result.add(new ContactData()
+//                                                    .withFirstName(firstName)
+//                                                    .withLasttName(lastName)
+//                                                    .withHomeAddress(homeAddress)
+//                                                    .withMobilePhone("")
+//                                                    .withMail("")
+//                                                    );
+//                }
+//            }
+//        }
+        var json = Files.readString(Paths.get("contacts.json"));
+        ObjectMapper mapper = new ObjectMapper();
 
-        for (int i = 0; i < 5; i++) {
-            result.add(new ContactData()
-                            .withFirstName(CommonFunctions.randomString(i * 10))
-                            .withLasttName(CommonFunctions.randomString(i * 10))
-                            .withHomeAddress(CommonFunctions.randomString(i * 10))
-                            .withMobilePhone(CommonFunctions.randomString(i * 10))
-                            .withMail(CommonFunctions.randomString(i * 10))
-                            );
-        }
+        var value = mapper.readValue(json, new TypeReference<List<ContactData>>() {});
+        result.addAll(value);
         return result;
     }
 
@@ -45,7 +47,7 @@ public class ContactCreationTests extends TestBase {
     public void canCreateMultipleContacts(ContactData contact) {
         int contactCount = app.contacts().getCount();
 
-        app.contacts().createContact(contact);;
+        app.contacts().createContact(contact);
 
         int newContactCount = app.contacts().getCount();
         Assertions.assertEquals(contactCount + 1, newContactCount);
@@ -53,7 +55,7 @@ public class ContactCreationTests extends TestBase {
 
     public static List<ContactData> negativeContactProvider() {
         var result = new ArrayList<ContactData>(List.of(
-                new ContactData("", "FirstName'", "", "", "", "", "")));
+                new ContactData("", "FirstName'", "", "", "", "", "src/test/resources/images/avatar.png")));
         return result;
     }
 
@@ -62,7 +64,7 @@ public class ContactCreationTests extends TestBase {
     public void canNotCreateContact(ContactData contact) {
         int contactCount = app.contacts().getCount();
 
-        app.contacts().createContact(contact);;
+        app.contacts().createContact(contact);
 
         int newContactCount = app.contacts().getCount();
         Assertions.assertEquals(contactCount, newContactCount);
@@ -73,7 +75,7 @@ public class ContactCreationTests extends TestBase {
         var contact = new ContactData()
                 .withFirstName(CommonFunctions.randomString(10))
                 .withLasttName(CommonFunctions.randomString(10))
-                .withPhoto(randomFile("src/test/resources/images"));
+                .withPhoto(CommonFunctions.randomFile("src/test/resources/images"));
         app.contacts().createContact(contact);
     }
 }
