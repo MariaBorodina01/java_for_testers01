@@ -5,6 +5,8 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 import common.CommonFunctions;
 import model.GroupData;
@@ -45,7 +47,7 @@ public class Generator {
         save(data);
     }
 
-    private ArrayList<GroupData> generate() throws IllegalConnectorArgumentsException {
+    private Object generate() throws IllegalConnectorArgumentsException {
         if ("groups".equals(type)) {
             return generateGroups();
         } else if ("contacts".equals(type)) {
@@ -55,13 +57,13 @@ public class Generator {
         }
     }
 
-    private ArrayList<GroupData> generateContacts() {
+    private Object generateContacts() {
         return null;
     }
 
-    private ArrayList<GroupData> generateGroups() {
+    private Object generateGroups() {
         var result = new ArrayList<GroupData>();
-        for (int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             result.add(new GroupData()
                     .withName(CommonFunctions.randomString(i * 10))
                     .withHeader(CommonFunctions.randomString(i * 10))
@@ -70,18 +72,26 @@ public class Generator {
         return result;
     }
 
-    private void save(ArrayList<GroupData> data) throws IllegalConnectorArgumentsException, IOException {
-        if("json".equals(format)){
+    private void save(Object data) throws IllegalConnectorArgumentsException, IOException {
+        if ("json".equals(format)) {
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             var json = mapper.writeValueAsString(data);
 
-            try (var writer = new FileWriter(output)){
+            try (var writer = new FileWriter(output)) {
                 writer.write(json);
-            };
+            }
+            ;
         }
-        else {
-            throw  new IllegalConnectorArgumentsException("Неизвестный формат данных " + format, "");
+        if ("yaml".equals(format)) {
+            var mapper = new YAMLMapper();
+            mapper.writeValue(new File(output), data);
+        }
+        if ("xml".equals(format)) {
+            var mapper = new XmlMapper();
+            mapper.writeValue(new File(output), data);
+        } else {
+            throw new IllegalConnectorArgumentsException("Неизвестный формат данных " + format, "");
         }
     }
 }
